@@ -1,0 +1,461 @@
+{% extends 'dashboard/base.html' %}
+{% block content %}
+
+<head>
+  <meta charset="UTF-8">
+  <title>Daily Entry Form with Validations</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-10">
+
+  <div class="max-w-6xl mx-auto bg-white shadow-lg rounded-lg p-6">
+    <h1 class="text-3xl font-bold mb-6">Daily Entry Form</h1>
+
+    <!-- Tab Navigation -->
+    <div class="border-b border-gray-300 mb-6">
+      <nav class="flex space-x-6" id="tabs">
+        <button class="py-2 px-4 font-medium text-indigo-600 border-b-2 border-indigo-600" 
+                onclick="showTab('entry')">Entry</button>
+        <button class="py-2 px-4 font-medium text-gray-600 hover:text-indigo-600" 
+                onclick="showTab('validations')">Validations</button>
+      </nav>
+    </div>
+
+    <!-- Entry Tab -->
+    <div id="tab-entry" class="tab-content">
+
+      <!-- Your other entry form fields go here -->
+	  
+	  <body class="bg-gray-50 min-h-screen py-8">
+  <div class="max-w-6xl mx-auto px-4">
+    <div class="bg-white shadow rounded-lg overflow-hidden">
+      <div class="px-6 py-5 border-b">
+        <h1 class="text-2xl font-semibold">Daily Entry Ticket</h1>
+        <p class="text-sm text-gray-500 mt-1">Create / edit general entry ticket (TS Daily Entry).</p>
+      </div>
+
+      <form id="ticketForm" class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+        <!-- Left Column -->
+        <section class="lg:col-span-1 space-y-4">
+          <div>
+            <label class="block font-medium req text-gray-700">Ticket Code</label>
+            <input id="ticketCode" type="text" placeholder="Unique Ticket Code (e.g. T001)"
+              class="mt-1 block w-full border rounded px-3 py-2 focus:ring focus:ring-blue-300" />
+          </div>
+          <div>
+            <label class="block font-medium req text-gray-700">Ticket Name</label>
+            <input id="ticketName" type="text" placeholder="TS Daily Entry Ticket"
+              class="mt-1 block w-full border rounded px-3 py-2 focus:ring focus:ring-blue-300" />
+          </div>
+          <div>
+            <label class="block font-medium">Description</label>
+            <textarea id="planDesc" rows="3" placeholder="Optional description"
+              class="mt-1 w-full border rounded px-3 py-2"></textarea>
+          </div>
+          <div>
+            <label class="block font-medium req text-gray-700">Display Name</label>
+            <input id="displayName" type="text" placeholder="Name shown on Website"
+              class="mt-1 block w-full border rounded px-3 py-2 focus:ring focus:ring-blue-300" />
+          </div>
+
+          <!-- Active Toggle -->
+          <div class="flex justify-center pt-6 col-span-4">
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="is_active" name="is_active" value="1" checked class="sr-only peer">
+              <div class="w-14 h-7 bg-red-400 peer-checked:bg-green-500 rounded-full peer relative transition-colors">
+                <span class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-7"></span>
+              </div>
+              <span class="ml-3 text-gray-700 font-medium">Active</span>
+            </label>
+          </div>
+
+          <div>
+            <label class="block font-medium text-gray-700">Channels</label>
+            <div class="flex gap-3 mt-2 flex-wrap">
+              <label class="inline-flex items-center gap-2"><input type="checkbox" class="channel" value="Web" checked> Web</label>
+              <label class="inline-flex items-center gap-2"><input type="checkbox" class="channel" value="POS"> POS</label>
+              <label class="inline-flex items-center gap-2"><input type="checkbox" class="channel" value="Kiosk"> Kiosk</label>
+              <label class="inline-flex items-center gap-2"><input type="checkbox" class="channel" value="Website"> Website</label>
+              <label class="inline-flex items-center gap-2"><input type="checkbox" class="channel" value="OTA"> OTA</label>
+            </div>
+          </div>
+          <div>
+            <label class="block font-medium text-gray-700">Image (optional)</label>
+            <input id="imageFile" type="file" accept="image/*" class="mt-1 block w-full" />
+            <div id="imgPreview" class="mt-3 hidden">
+              <img id="imgPreviewTag" class="w-44 h-28 object-cover rounded border" alt="preview">
+              <div><button id="removeImage" type="button" class="mt-2 text-xs text-red-600">Remove image</button></div>
+            </div>
+          </div>
+          <div>
+            <label class="block font-medium text-gray-700">Video URL (optional)</label>
+            <input id="videoUrl" type="url" placeholder="https://youtube.com/..."
+              class="mt-1 block w-full border rounded px-3 py-2" />
+          </div>
+        </section>
+
+        <!-- Middle Column -->
+        <section class="lg:col-span-1 space-y-4">
+          <div>
+            <label class="block font-medium text-gray-700">Tax Type</label>
+            <select id="taxType" class="mt-1 block w-full border rounded px-3 py-2">
+              <option value="Inclusive">Inclusive</option>
+              <option value="Exclusive">Exclusive</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-medium req text-gray-700">Tax %</label>
+            <select id="taxPercent" class="mt-1 block w-full border rounded px-3 py-2"></select>
+          </div>
+          <div>
+            <label class="block font-medium text-gray-700">HSN Code (auto)</label>
+            <input id="hsnCode" type="text" readonly class="mt-1 block w-full border rounded px-3 py-2 bg-gray-50" />
+          </div>
+
+          <!-- Age and Plan Matrix -->
+          <section class="lg:col-span-1 space-y-4">
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold mb-2">Select Age Groups</h3>
+              <div class="flex gap-4 flex-wrap">
+                <label><input type="checkbox" onclick="toggleSelection('age','0-6')"> 0-6</label>
+                <label><input type="checkbox" onclick="toggleSelection('age','7-10')"> 7-10</label>
+                <label><input type="checkbox" onclick="toggleSelection('age','11-17')"> 11-17</label>
+                <label><input type="checkbox" onclick="toggleSelection('age','18+')"> 18+</label>
+              </div>
+            </div>
+            <div class="mb-6">
+              <h3 class="text-lg font-semibold mb-2">Select Types</h3>
+              <div class="flex gap-4 flex-wrap">
+                <label><input type="checkbox" onclick="toggleSelection('plan','NGO')"> NGO</label>
+                <label><input type="checkbox" onclick="toggleSelection('plan','School')"> School</label>
+                <label><input type="checkbox" onclick="toggleSelection('plan','Corporate')"> Corporate</label>
+                <label><input type="checkbox" onclick="toggleSelection('plan','Govt School')"> Govt School</label>
+              </div>
+            </div>
+            <div id="pricingUI" class="mt-6">
+              <p class="text-gray-500 italic">Select Age Group(s) and Plan(s) to define pricing.</p>
+            </div>
+          </section>
+        </section>
+
+        <!-- Right Column -->
+        <section class="lg:col-span-1 space-y-4">
+          <div>
+            <label class="block font-medium text-gray-700">Apply Discount?</label>
+            <select id="discountYN" class="mt-1 block w-full border rounded px-3 py-2">
+              <option value="N">N</option>
+              <option value="Y">Y</option>
+            </select>
+          </div>
+          <div id="discountTypeWrap" class="hidden">
+            <label class="block font-medium text-gray-700">Discount Type</label>
+            <select id="discountType" class="mt-1 block w-full border rounded px-3 py-2"></select>
+          </div>
+		  
+		  
+    <!-- Group Discount Section -->
+    <div class="bg-gray-50 border p-4 rounded-lg mt-6">
+      <h3 class="font-semibold mb-3 text-lg">Group Discount</h3>
+      <div class="flex items-center gap-4">
+        <label for="groupSize" class="text-sm">Eligible if group size is</label>
+         <input type="text" id="groupSize" placeholder="e.g. >5" 
+           class="w-28 border rounded p-1"   maxlength="4"
+           oninput="this.value = this.value.replace(/[^0-9>]/g, '')">
+		
+		
+      </div>
+    </div>
+          <div>
+            <label class="block font-medium text-gray-700">Addons</label>
+            <select id="addons" class="mt-1 block w-full border rounded px-3 py-2">
+              <option value="">-- None --</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-medium req">Capacity</label>
+            <input type="number" id="capacity" min="1" class="mt-1 w-full border rounded px-3 py-2">
+          </div>
+
+          <div class="mt-6 flex items-center gap-3">
+<button   type="button" id="btnCancel"  class="px-4 py-2 rounded-lg bg-gray-500 hover:bg-gray-600 text-white font-medium">
+  Cancel
+</button>
+            <button type="reset" class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium">Reset</button>
+            <button type="button" id="btnSave" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium">Save</button>
+          </div>
+        </section>
+      </form>
+    </div>
+
+
+  </div>
+
+    </div>
+
+    <!-- Validations Tab -->
+    <div id="tab-validations" class="tab-content hidden">
+      <h2 class="text-2xl font-bold mb-6">Age Group & Guardian Matrix</h2>
+
+      <form id="ageGroupForm" class="space-y-6">
+        <table class="w-full border border-gray-300 rounded-lg overflow-hidden">
+          <thead class="bg-indigo-600 text-white">
+            <tr>
+              <th class="px-4 py-3 text-left">Age Group</th>
+              <th class="px-4 py-3 text-left">No. of Persons (&lt; or &gt; allowed)</th>
+              <th class="px-4 py-3 text-left">Required (18+)</th>
+              <th class="px-4 py-3 text-center">Accept Waiver (18+)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="px-4 py-3">0 – 6 years</td>
+              <td><input type="text" id="age0_6" placeholder="e.g. <5 or 10" class="w-28 border rounded p-1"></td>
+              <td class="px-4 py-3 flex gap-2">
+                <span class="px-2 py-1 text-sm bg-gray-100 border rounded">18+</span>
+                <input type="number" id="req0_6" min="0" value="0" class="w-16 border rounded p-1">
+              </td>
+              <td class="px-4 py-3 text-center"><input type="checkbox" class="h-5 w-5 text-indigo-600"></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3">7 – 10 years</td>
+              <td><input type="text" id="age7_10" placeholder="e.g. >3 or 8" class="w-28 border rounded p-1"></td>
+              <td class="px-4 py-3 flex gap-2">
+                <span class="px-2 py-1 text-sm bg-gray-100 border rounded">18+</span>
+                <input type="number" id="req7_10" min="0" value="0" class="w-16 border rounded p-1">
+              </td>
+              <td class="px-4 py-3 text-center"><input type="checkbox" class="h-5 w-5 text-indigo-600"></td>
+            </tr>
+            <tr>
+              <td class="px-4 py-3">11 – 17 years</td>
+              <td><input type="text" id="age11_17" placeholder="e.g. <12" class="w-28 border rounded p-1"></td>
+              <td class="px-4 py-3 flex gap-2">
+                <span class="px-2 py-1 text-sm bg-gray-100 border rounded">18+</span>
+                <input type="number" id="req11_17" min="0" value="0" class="w-16 border rounded p-1">
+              </td>
+              <td class="px-4 py-3 text-center"><input type="checkbox" class="h-5 w-5 text-indigo-600"></td>
+            </tr>
+       
+          </tbody>
+        </table>
+
+        <div id="validationMsg" class="text-red-600 font-medium"></div>
+
+          <div class="mt-6 flex items-center gap-3">
+                <div class="mt-6 flex items-center gap-3">
+<button   type="button" id="btnCancel"  class="px-4 py-2 rounded-lg bg-gray-500 hover:bg-gray-600 text-white font-medium">
+  Cancel
+</button>
+            <button type="reset"   class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium">Reset</button>
+            <button type="button" id="btnSave" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium">Save</button>
+          </div>
+		
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Tab switcher
+    function showTab(tab) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.getElementById('tab-' + tab).classList.remove('hidden');
+      document.querySelectorAll('#tabs button').forEach(btn => btn.classList.remove('text-indigo-600','border-b-2','border-indigo-600'));
+      event.target.classList.add('text-indigo-600','border-b-2','border-indigo-600');
+    }
+
+    function parseNumberInput(val) {
+      if (!val) return null;
+      val = val.trim();
+      if (val.startsWith('<') || val.startsWith('>')) {
+        return val; // condition string
+      }
+      return parseInt(val) || 0; // exact number
+    }
+
+    function validateForm() {
+      const age0_6 = parseNumberInput(document.getElementById('age0_6').value);
+      const age7_10 = parseNumberInput(document.getElementById('age7_10').value);
+      const age11_17 = parseNumberInput(document.getElementById('age11_17').value);
+      const age18 = parseNumberInput(document.getElementById('age18').value);
+
+      let messages = [];
+
+      // Rule: For every 4 minors (0-6), one 18+ required
+      if (typeof age0_6 === "number" && age0_6 > 0) {
+        const requiredAdults = Math.ceil(age0_6 / 4);
+        if (typeof age18 === "number" && age18 < requiredAdults) {
+          messages.push(`At least ${requiredAdults} adults required for ${age0_6} minors (0–6 yrs).`);
+        }
+      }
+
+      // Rule: For 11-17 age group, at least 1 guardian (18+)
+      if (typeof age11_17 === "number" && age11_17 > 0) {
+        if (typeof age18 !== "number" || age18 < 1) {
+          messages.push(`At least 1 adult guardian is required for ${age11_17} participants (11–17 yrs).`);
+        }
+      }
+
+      const msgBox = document.getElementById('validationMsg');
+      if (messages.length > 0) {
+        msgBox.innerHTML = messages.join("<br>");
+      } else {
+        msgBox.innerHTML = "<span class='text-green-600'>All validations passed. ✅</span>";
+      }
+    }
+  </script>
+  
+    <script>
+    // === Data (mock) ===
+    const TAX_OPTIONS = [
+      { pct: 0, label: '0%' , hsn: '0000' },
+      { pct: 5, label: '5%' , hsn: '0101' },
+      { pct: 12, label: '12%' , hsn: '0202' },
+      { pct: 18, label: '18%' , hsn: '0303' },
+      { pct: 28, label: '28%' , hsn: '0404' }
+    ];
+    const DISCOUNTS = [
+      { id: 'DHAROHAR20', name: 'Dharohar 20% (DHAROHAR20)' },
+      { id: 'TS150', name: 'TS Flat 150 (TS150)' }
+    ];
+    const ADDONS = [
+      { id: 'AD1', name: 'Library' },
+      { id: 'AD2', name: 'Snack Pack' }
+    ];
+
+    let selectedAges = [];
+    let selectedPlans = [];
+
+    // === Init Tax ===
+    const taxSelect = document.getElementById('taxPercent');
+    TAX_OPTIONS.forEach(t => taxSelect.append(new Option(t.label, t.pct)));
+    const hsnInput = document.getElementById('hsnCode');
+    taxSelect.addEventListener('change', e => {
+      const found = TAX_OPTIONS.find(t => t.pct == e.target.value);
+      hsnInput.value = found ? found.hsn : '';
+    });
+    taxSelect.value = 18; taxSelect.dispatchEvent(new Event('change'));
+
+    // Init Discounts & Addons
+    const discountType = document.getElementById('discountType');
+    DISCOUNTS.forEach(d => discountType.add(new Option(d.name, d.id)));
+    const addonsSel = document.getElementById('addons');
+    ADDONS.forEach(a => addonsSel.add(new Option(a.name, a.id)));
+
+    // Discount toggle
+    document.getElementById('discountYN').addEventListener('change', e => {
+      document.getElementById('discountTypeWrap').classList.toggle('hidden', e.target.value !== 'Y');
+    });
+
+    // Selection toggles
+    function toggleSelection(type, value) {
+      if (type === 'age') {
+        selectedAges = toggleArray(selectedAges, value);
+      } else {
+        selectedPlans = toggleArray(selectedPlans, value);
+      }
+      buildPricingUI();
+    }
+    function toggleArray(arr, val) {
+      return arr.includes(val) ? arr.filter(v => v !== val) : [...arr, val];
+    }
+
+    // Pricing matrix
+    function buildPricingUI() {
+      const wrap = document.getElementById('pricingUI');
+      wrap.innerHTML = '';
+      if (!selectedAges.length || !selectedPlans.length) {
+        wrap.innerHTML = `<p class="text-gray-500 italic">Select Age Group(s) and Plan(s) to define pricing.</p>`;
+        return;
+      }
+      const table = document.createElement('table');
+      table.className = 'w-full border text-sm';
+      const thead = document.createElement('thead');
+      thead.innerHTML = `<tr><th class="border px-2 py-1">Age \\ Plan</th>${selectedPlans.map(p=>`<th class="border px-2 py-1">${p}</th>`).join('')}</tr>`;
+      table.appendChild(thead);
+      const tbody = document.createElement('tbody');
+      selectedAges.forEach(a => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td class="border px-2 py-1 font-medium">${a}</td>` +
+          selectedPlans.map(p=>`
+            <td class="border px-2 py-1">
+              <input type="number" min="0" class="priceInput w-20 border rounded px-1 mb-1" data-age="${a}" data-plan="${p}" placeholder="₹">
+              <label class="text-xs flex items-center gap-1">
+                <input type="checkbox" class="activeToggle" data-age="${a}" data-plan="${p}" checked> Active
+              </label>
+            </td>`).join('');
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }
+
+    // Image preview
+    const imageFile = document.getElementById('imageFile');
+    const imgPreview = document.getElementById('imgPreview');
+    const imgPreviewTag = document.getElementById('imgPreviewTag');
+    document.getElementById('removeImage').onclick = () => { imageFile.value = ''; imgPreview.classList.add('hidden'); };
+    imageFile.onchange = e => {
+      const f = e.target.files[0];
+      if (f) { imgPreviewTag.src = URL.createObjectURL(f); imgPreview.classList.remove('hidden'); }
+    };
+
+    // Cancel
+    document.getElementById('btnCancel').onclick = () => {
+      
+    };
+
+    // Save
+    document.getElementById('btnSave').onclick = () => {
+      const pricing = {};
+      document.querySelectorAll('.priceInput').forEach(inp => {
+        const age = inp.dataset.age, plan = inp.dataset.plan;
+        const toggle = document.querySelector(`.activeToggle[data-age="${age}"][data-plan="${plan}"]`);
+        pricing[`${age}_${plan}`] = {
+          price: inp.value ? Number(inp.value) : null,
+          active: toggle?.checked ?? false
+        };
+      });
+
+      const payload = {
+        ticketCode: document.getElementById('ticketCode').value,
+        ticketName: document.getElementById('ticketName').value,
+        displayName: document.getElementById('displayName').value,
+        description: document.getElementById('planDesc').value,
+        active: document.getElementById('is_active').checked,
+        taxType: document.getElementById('taxType').value,
+        taxPercent: document.getElementById('taxPercent').value,
+        hsn: document.getElementById('hsnCode').value,
+        channels: Array.from(document.querySelectorAll('.channel:checked')).map(c=>c.value),
+        discountYN: document.getElementById('discountYN').value,
+        discountType: document.getElementById('discountType').value,
+        addons: document.getElementById('addons').value,
+        video: document.getElementById('videoUrl').value,
+        capacity: document.getElementById('capacity').value,
+        pricing
+      };
+      console.log('Saved Payload:', payload);
+      showToast('Saved successfully', 1800);
+    };
+
+    // Toast
+    function showToast(msg, dur=1500, err=false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = msg;
+      toast.classList.add('show');
+      toast.style.background = err ? '#dc2626' : '#111827';
+      setTimeout(()=>toast.classList.remove('show'), dur);
+    }
+
+     document.getElementById("btnCancel").addEventListener("click", function () {
+    if (confirm("Are you sure you want to cancel and go back to the main page?")) {
+      // Replace with your main page URL
+      window.location.href = "{% url 'dashboard_home' %}"; 
+      // or if plain HTML: window.location.href = "index.html";
+    }
+  });
+  </script>
+
+</body>
+</html>
+{% endblock content %}
+
+ 

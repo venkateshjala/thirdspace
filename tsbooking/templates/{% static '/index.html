@@ -1,0 +1,271 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Panel Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <style>
+    /* (keep all your CSS as it is) */
+    :root {
+      --sidebar-width: 220px;
+      --sidebar-collapsed-width: 60px;
+      --primary-color: #c0bfd1b4;
+      --accent-color: #00d6b6;
+      --text-color: #fff;
+      --bg-light: #f4f6fb;
+      --navbar-height: 56px;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: var(--bg-light);
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: var(--navbar-height);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--primary-color);
+      color: var(--text-color);
+      padding: 0 20px;
+      z-index: 1000;
+    }
+
+    .navbar .site-title {
+      font-size: 1.25rem;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    .navbar .user-details {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .navbar .user-details img {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    .navbar .logout-btn {
+      background: var(--accent-color);
+      color: var(--primary-color);
+      border: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .sidebar-nav a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: var(--navbar-height);
+      left: 0;
+      height: calc(100vh - var(--navbar-height));
+      width: var(--sidebar-width);
+      background: var(--primary-color);
+      color: var(--text-color);
+      transition: width 0.25s;
+      overflow-y: auto;
+      z-index: 999;
+    }
+
+    .sidebar.collapsed {
+      width: var(--sidebar-collapsed-width);
+    }
+
+    .sidebar .toggle-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: var(--accent-color);
+      color: var(--primary-color);
+      border: none;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+    }
+
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 10px 0 0;
+    }
+
+    .sidebar li {
+      padding: 14px 20px;
+      cursor: pointer;
+      font-size: 1.05rem;
+      transition: background 0.18s;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .sidebar li:hover {
+      background: var(--accent-color);
+      color: var(--primary-color);
+    }
+
+    .sidebar.collapsed li span.text {
+      display: none;
+    }
+
+    /* Remove blue color and underline for all links */
+    a {
+      color: inherit;          /* inherit color from parent */
+      text-decoration: none;   /* remove underline */
+      cursor: pointer;         /* keep click cursor */
+    }
+
+    a:hover {
+      opacity: 0.8;
+    }
+
+    .submaster-ul {
+      list-style-type: none;
+      padding-left: 30px;
+      margin: 0;
+      margin-top: 10px;
+      display: none;
+    }
+
+    .submaster-ul li {
+      padding: 10px 0;
+      font-size: 0.95rem;
+    }
+
+    .submaster-ul li:hover {
+      background: var(--accent-color);
+      color: var(--primary-color);
+    }
+
+    .main-content {
+      position: absolute;
+      top: var(--navbar-height);
+      left: var(--sidebar-width);
+      right: 0;
+      bottom: 0;
+      padding: 34px 20px;
+      overflow-y: auto;
+      background: var(--bg-light);
+      transition: left 0.25s;
+    }
+
+    .sidebar.collapsed ~ .main-content {
+      left: var(--sidebar-collapsed-width);
+    }
+
+    @media (max-width: 600px) {
+      .sidebar {
+        width: 70vw;
+        left: -70vw;
+        transition: left 0.25s;
+      }
+      .sidebar.open {
+        left: 0;
+      }
+      .main-content {
+        left: 0;
+      }
+    }
+
+  </style>
+</head>
+
+<body>
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="site-title-container" style="display:flex;align-items:center;gap:10px;">
+      <img src="" alt="" style="height:32px;width:32px;object-fit:contain;">
+      <div class="site-title">Admin Panel</div>
+    </div>
+    <div class="user-details">
+      <img src="https://i.pravatar.cc/150?img=5" alt="User">
+      <span>John Admin</span>
+      <button class="logout-btn">Logout</button>
+    </div>
+  </nav>
+
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <button class="toggle-btn" id="toggleBtn">☰</button>
+    <ul>
+      <li>
+        <a href="{% url 'dashboard_home' %}"><span style="margin-left:auto;">📊 </span><span class="text" style="margin-left:10px;">Dashboard</span></a>
+      </li>
+      <li onclick="toggleSubMaster()" id="mastersMenu">
+        <span>🏠</span><span class="text">Masters</span>
+        <span id="arrow" ></span>
+      </li>
+      <ul class="submaster-ul" id="subMasterMenu">
+        <li><a href="{% url 'daily_entry' %}"><span style="margin-left:auto;">🔹</span><span class="text" style="margin-left:10px;">DailyEntry</span></a></li>
+        <li><a href="#"><span style="margin-left:auto;">🔹</span><span class="text" style="margin-left:10px;">Sub Master 2</span></a></li>
+      </ul>
+      <li><a href="#"><span>⚙️</span><span class="text" style="margin-left:10px;">Settings</span></a></li>
+      <li><a href="#"><span>💳</span><span class="text" style="margin-left:10px;">Transactions</span></a></li>
+      <li><a href="#"><span>📈</span><span class="text" style="margin-left:10px;">Reports</span></a></li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <section class="main-content" id="mainContent">
+    {% block content %}
+    <!-- Default content (if any) -->
+    <div id="dashboard" class="section">
+      <h2>Dashboard</h2>
+      <p>Overview of website metrics, recent activity, and quick links.</p>
+    </div>
+    {% endblock content %}
+  </section>
+
+  <script>
+    const sidebar = document.getElementById('sidebar');
+    const toggleBtn = document.getElementById('toggleBtn');
+    const subMenu = document.getElementById('subMasterMenu');
+    const arrow = document.getElementById('arrow');
+
+    toggleBtn.addEventListener('click', () => {
+      if (window.innerWidth <= 600) {
+        sidebar.classList.toggle('open');
+      } else {
+        sidebar.classList.toggle('collapsed');
+        document.querySelector('.main-content').classList.toggle('collapsed');
+      }
+    });
+
+    function toggleSubMaster() {
+      if (subMenu.style.display === 'block') {
+        subMenu.style.display = 'none';
+        arrow.textContent = '';
+      } else {
+        subMenu.style.display = 'block';
+        arrow.textContent = '▼';
+      }
+    }
+  </script>
+</body>
+</html>

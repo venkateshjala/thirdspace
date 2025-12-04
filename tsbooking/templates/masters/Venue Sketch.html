@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en" x-data>
+<head>
+  <meta charset="UTF-8">
+  <title>Venue Hire Master Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/alpinejs" defer></script>
+</head>
+<body class="bg-gray-50 min-h-screen py-8">
+
+<div class="max-w-6xl mx-auto px-4">
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+    <div class="px-6 py-5 border-b">
+      <h2 class="text-2xl font-bold text-gray-800 mb-6">Venue Hire Master</h2>
+      
+      <!-- 3-column grid form -->
+      <form id="venueForm" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <!-- Row 1 -->
+        <div>
+          <label for="venueCode" class="block text-gray-700 font-medium">Venue Code <span class="text-red-500">*</span></label>
+          <input type="text" id="venueCode" name="venueCode" pattern="[A-Za-z0-9]+" required
+                 class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300">
+        </div>
+
+        <div>
+          <label for="venueName" class="block text-gray-700 font-medium">Venue Name <span class="text-red-500">*</span></label>
+          <input type="text" id="venueName" name="venueName" maxlength="100" required
+                 class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300">
+        </div>
+
+        <div>
+          <label for="space" class="block text-gray-700 font-medium">Area Space (square Yard) <span class="text-red-500">*</span></label>
+          <input type="number" id="space" name="space" min="1" required
+                 class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300">
+        </div>
+
+        <!-- Row 2 -->
+        <div>
+          <label for="typeOfVenue" class="block text-gray-700 font-medium">Type of Venue <span class="text-red-500">*</span></label>
+          <select id="typeOfVenue" name="typeOfVenue" required
+                  class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300">
+            <option value="">-- Select Type --</option>
+            <option value="small">Small</option>
+            <option value="big">Big</option>
+            <option value="outdoor">Outdoor Venue</option>
+          </select>
+        </div>
+
+        <div class="col-span-2" x-data="multiSelectDropdown(resources, selectedResources)">
+          <label class="block font-medium text-gray-700">Resources (Admin Requirements) <span class="text-red-500">*</span></label>
+          <div @click="open = !open" class="w-full border rounded px-3 py-2 mt-2 cursor-pointer flex justify-between items-center bg-white">
+            <span x-text="selected.length ? selected.join(', ') : '-- Select Resources --'"></span>
+            <svg class="w-5 h-5 transform" :class="{'rotate-180': open}" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+            </svg>
+          </div>
+          <div x-show="open" x-transition @click.away="open = false" class="absolute z-10 mt-1 w-full bg-white border rounded shadow max-h-60 overflow-auto">
+            <template x-for="item in items" :key="item">
+              <label class="flex items-center px-3 py-2 cursor-pointer hover:bg-gray-100">
+                <input type="checkbox" class="mr-2" :value="item" @change="toggleSelection(item)" :checked="selected.includes(item)">
+                <span x-text="item"></span>
+              </label>
+            </template>
+          </div>
+        </div>
+
+        <!-- Row 3: Full width -->
+        <div class="col-span-3">
+          <label for="description" class="block text-gray-700 font-medium">Description</label>
+          <textarea id="description" name="description" rows="3"
+                    class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring focus:ring-blue-300"></textarea>
+        </div>
+
+   <!-- GST, HSN, Capacity -->
+      <div>
+        <label class="block font-medium req">Tax Type</label>
+        <select id="gstSelect" class="mt-1 w-full border rounded px-3 py-2">
+          <option value="5">Inclusive</option>
+          <option value="28">Exclusive</option>
+        </select>
+      </div>
+	   <div>
+        <label class="block font-medium req">Tax %</label>
+        <input type="text" id="hsn" class="mt-1 w-full border rounded px-3 py-2"
+          placeholder="Auto-filled based on GST" readonly>
+      </div>
+      <div>
+        <label class="block font-medium req">HSN Code</label>
+        <input type="text" id="hsn" class="mt-1 w-full border rounded px-3 py-2"
+          placeholder="Auto-filled based on GST" readonly>
+      </div>
+      <div>
+        <label class="block font-medium req">Capacity</label>
+        <input type="number" id="capacity" min="1" class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+
+        <!-- Row 4 -->
+        <div>
+          <label class="block font-medium">Activation Start Date</label>
+          <input type="date" id="activationStart" class="mt-1 w-full border rounded px-3 py-2">
+        </div>
+        <div>
+          <label class="block font-medium">Activation End Date</label>
+          <input type="date" id="activationEnd" class="mt-1 w-full border rounded px-3 py-2">
+        </div>
+
+
+        <!-- Row 5 -->
+        <div>
+          <label class="block font-medium">Image (optional)</label>
+          <input type="file" accept="image/*" class="mt-1 w-full border rounded px-3 py-2">
+        </div>
+
+        <div>
+          <label class="block font-medium">Video URL (optional)</label>
+          <input type="url" placeholder="https://youtube.com/..." class="mt-1 w-full border rounded px-3 py-2">
+        </div>
+
+        <div>
+          <label class="block font-medium">Channels</label>
+          <div class="flex gap-3 mt-2 flex-wrap">
+            <label class="inline-flex items-center gap-2"><input type="checkbox" value="WEB"> WEB</label>
+            <label class="inline-flex items-center gap-2"><input type="checkbox" value="POS"> POS</label>
+            <label class="inline-flex items-center gap-2"><input type="checkbox" value="APP"> APP</label>
+            <label class="inline-flex items-center gap-2"><input type="checkbox" value="KIOSK"> KIOSK</label>
+			<label class="inline-flex items-center gap-2"><input type="checkbox" value="OTA"> KIOSK</label>
+          </div>
+        </div>
+		
+		   <div id="partnershipDiv" class="">
+        <label class="block font-medium">Partnership</label>
+        <label class="relative inline-flex items-center cursor-pointer mt-1">
+          <input type="checkbox" id="partnershipToggle" class="sr-only peer">
+          <div class="w-14 h-7 bg-red-400 peer-checked:bg-green-500 rounded-full relative transition-colors">
+            <span class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-7"></span>
+          </div>
+          <span class="ml-3 text-gray-700 font-medium">Active</span>
+        </label>
+      </div>
+
+
+        <!-- Row 6: Full width Active toggle -->
+        <div class="col-span-3 flex justify-center pt-6">
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="is_active" name="is_active" value="1" checked class="sr-only peer">
+            <div class="w-14 h-7 bg-red-400 peer-checked:bg-green-500 rounded-full relative transition-colors">
+              <span class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-7"></span>
+            </div>
+            <span class="ml-3 text-gray-700 font-medium">Active</span>
+          </label>
+        </div>
+
+        <!-- Buttons -->
+        <div class="col-span-3 flex justify-center gap-4 pt-6">
+          <button type="button" class="px-5 py-2 rounded-lg bg-gray-500 hover:bg-gray-600 text-white font-medium">Cancel</button>
+          <button type="reset" class="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium">Reset</button>
+          <button type="submit" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium">Save</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+
+<script>
+  function multiSelectDropdown(items, selected) {
+    return {
+      open: false,
+      items: items,
+      selected: selected,
+      toggleSelection(item) {
+        if (this.selected.includes(item)) {
+          this.selected = this.selected.filter(i => i !== item);
+        } else {
+          this.selected.push(item);
+        }
+      }
+    }
+  }
+
+  let resources = ['Projector', 'Chairs', 'Tables', 'Sound System'];
+  let selectedResources = [];
+</script>
+
+</body>
+</html>

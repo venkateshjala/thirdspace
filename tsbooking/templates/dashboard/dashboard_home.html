@@ -1,0 +1,67 @@
+{% extends 'dashboard/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<!-- Main Content -->
+  <div class="lg:ml-0 p-6 space-y-6 transition-all">
+    <!-- Header -->
+    <div>
+      <h1 class="text-3xl font-bold">Overview Dashboard</h1>
+      <p class="text-sm text-gray-500">Yo ur web analytics dashboard</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="bg-white shadow rounded-lg p-4">
+      <div class="flex flex-wrap items-center gap-3">
+        <select class="border border-gray-300 rounded-md p-2 w-32 text-sm">
+          <option value="all">All</option>
+          <option value="users">Users</option>
+          <option value="sessions">Sessions</option>
+        </select>
+
+        <div class="flex gap-2">
+          <button class="border rounded-md px-3 py-1 text-sm">Online</button>
+          <button class="border rounded-md px-3 py-1 text-sm">Offline</button>
+          <button class="border rounded-md px-3 py-1 text-sm bg-blue-500 text-white">Current month</button>
+          <button class="border rounded-md px-3 py-1 text-sm">Last month</button>
+          <button class="border rounded-md px-3 py-1 text-sm">3 months</button>
+        </div>
+
+        <div class="ml-auto flex gap-2">
+          <button class="border rounded-md px-3 py-1 text-sm flex items-center gap-1">📅 MM/DD/YY</button>
+          <button class="border rounded-md px-3 py-1 text-sm flex items-center gap-1">📅 MM/DD/YY</button>
+        </div>
+      </div>
+    </div>
+
+
+<div class="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+  <div class="bg-white shadow rounded-lg p-4">
+    <h3 class="text-sm text-gray-500">Total Visitors</h3>
+    <p class="text-2xl font-bold">80</p>
+  </div>
+  <div class="bg-white shadow rounded-lg p-4">
+    <h3 class="text-sm text-gray-500">Visitor Revenue</h3>
+    <p class="text-2xl font-bold">₹5000</p>
+  </div>
+</div>
+
+<div class="bg-white shadow rounded-lg p-4 mt-6">
+  <h3 class="text-lg font-semibold mb-4">Visitor Analytics</h3>
+  <canvas id="visitorChart" height="120"></canvas>
+</div>
+
+<script>
+const ctx = document.getElementById("visitorChart").getContext("2d");
+new Chart(ctx, {
+  type: "bar",
+  data: {
+    labels: ["Jan","Feb","Mar","Apr","May"],
+    datasets: [
+      { label: "Previous", data: [100,200,300,250,400], backgroundColor: "rgba(99,102,241,0.5)" },
+      { label: "Current", data: [120,250,280,350,500], backgroundColor: "rgba(16,185,129,0.7)" },
+    ],
+  },
+});
+</script>
+{% endblock %}

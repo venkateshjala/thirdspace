@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Cinema Master Form</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+  <div class="bg-white w-full max-w-6xl shadow-xl rounded-2xl p-10">
+    <h2 class="text-2xl font-bold text-center text-indigo-700 mb-8">🎬 Cinema Product Master</h2>
+
+    <form class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+      <!-- Cinema Name -->
+      <div>
+        <label class="block text-gray-700 font-medium">Cinema Name <span class="text-red-500">*</span></label>
+        <input type="text" required placeholder="Enter unique cinema name" 
+               class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+      </div>
+
+      <!-- Cinema Description -->
+      <div>
+        <label class="block text-gray-700 font-medium">Description <span class="text-red-500">*</span></label>
+        <input type="text" required placeholder="Enter Description" 
+               class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+      </div>
+
+      <!-- Time Slot Multi-Select -->
+      <div class="relative">
+        <label class="block text-gray-700 font-medium mb-1">
+          Time Slot <span class="text-red-500">*</span>
+        </label>
+        <button onclick="toggleDropdown('timeslotDropdown')" type="button"
+          class="w-full border rounded-md px-3 py-2 flex justify-between items-center text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <span id="timeslotSelected">Select Time Slot(s)</span>
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div id="timeslotDropdown" class="hidden absolute mt-1 w-full bg-white border rounded-md shadow-lg z-10 max-h-60 overflow-y-auto">
+          <div class="p-2 border-b">
+            <input type="text" placeholder="Search..." class="w-full px-2 py-1 border rounded text-sm"
+              onkeyup="filterOptions(event, 'timeslotOption')" />
+          </div>
+          <div class="max-h-48 overflow-y-auto">
+            <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer timeslotOption">
+              <input type="checkbox" value="10:00 AM" class="timeslot h-4 w-4 text-blue-600"><span class="ml-2">10:00 AM</span>
+            </label>
+            <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer timeslotOption">
+              <input type="checkbox" value="1:00 PM" class="timeslot h-4 w-4 text-blue-600"><span class="ml-2">1:00 PM</span>
+            </label>
+            <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer timeslotOption">
+              <input type="checkbox" value="4:00 PM" class="timeslot h-4 w-4 text-blue-600"><span class="ml-2">4:00 PM</span>
+            </label>
+            <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer timeslotOption">
+              <input type="checkbox" value="7:00 PM" class="timeslot h-4 w-4 text-blue-600"><span class="ml-2">7:00 PM</span>
+            </label>
+            <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer timeslotOption">
+              <input type="checkbox" value="10:00 PM" class="timeslot h-4 w-4 text-blue-600"><span class="ml-2">10:00 PM</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Start & End Dates -->
+      <div class="grid grid-cols-2 gap-6 md:col-span-2">
+        <div>
+          <label class="block text-gray-700 font-medium">Start Date <span class="text-red-500">*</span></label>
+          <input type="date" required class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">End Date <span class="text-red-500">*</span></label>
+          <input type="date" required class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+        </div>
+      </div>
+
+      <!-- Booking Dates -->
+      <div class="grid grid-cols-2 gap-6 md:col-span-2">
+        <div>
+          <label class="block text-gray-700 font-medium">Booking Start Date <span class="text-red-500">*</span></label>
+          <input type="date" class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">Booking End Date <span class="text-red-500">*</span></label>
+          <input type="date" class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+        </div>
+      </div>
+
+      <!-- Tax + HSN -->
+      <div class="md:col-span-2 grid grid-cols-2 gap-4">
+        <div>
+          <label class="block text-gray-700 font-medium">Tax Rate <span class="text-red-500">*</span></label>
+          <select required class="w-full mt-1 px-2 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+            <option value="">-- Select Tax Code (from Tax Master) --</option>
+            <option>GST 18%</option>
+            <option>GST 12%</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-gray-700 font-medium">HSN <span class="text-red-500">*</span></label>
+          <input type="text" required placeholder="Enter HSN Code" value="3034"
+                 class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+        </div>
+      </div>
+
+      <!-- Subtitle -->
+      <div>
+        <label class="block text-gray-700 font-medium">Subtitle <span class="text-red-500">*</span></label>
+        <input type="text" required placeholder="Enter subtitle"
+               class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+      </div>
+
+      <!-- Ticket Types -->
+      <div class="md:col-span-2">
+        <label class="block text-gray-700 font-medium">Ticket Types <span class="text-red-500">*</span></label>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-2">
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" value="Recliner" data-capacity="60" class="ticketTypeCheckbox">
+            <label class="w-28">Recliner</label>
+            <input type="number" step="0.01" min="1" placeholder="Price" value="350"
+                   class="w-28 px-2 py-1 border rounded-lg">
+          </div>
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" value="Balcony" data-capacity="120" class="ticketTypeCheckbox">
+            <label class="w-28">Balcony</label>
+            <input type="number" step="0.01" min="1" placeholder="Price" value="250"
+                   class="w-28 px-2 py-1 border rounded-lg">
+          </div>
+          <div class="flex items-center space-x-2">
+            <input type="checkbox" value="General" data-capacity="300" class="ticketTypeCheckbox">
+            <label class="w-28">General</label>
+            <input type="number" step="0.01" min="1" placeholder="Price" value="150"
+                   class="w-28 px-2 py-1 border rounded-lg">
+          </div>
+        </div>
+      </div>
+
+      <!-- Discount -->
+      <div>
+        <label class="block text-gray-700 font-medium">Apply Discount? <span class="text-red-500">*</span></label>
+        <select required class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+          <option value="N" selected>No</option>
+          <option value="Y">Yes</option>
+        </select>
+      </div>
+
+      <!-- Discount Type Multi-Select -->
+      <div class="relative">
+        <label class="block text-gray-700 font-medium mb-1">Discount Type</label>
+        <button onclick="toggleDropdown('discountDropdown')" type="button"
+          class="w-full border rounded-md px-3 py-2 flex justify-between items-center text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <span id="discountSelected">Select Discount Type(s)</span>
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div id="discountDropdown" class="hidden absolute mt-1 w-full bg-white border rounded-md shadow-lg z-10 max-h-60 overflow-y-auto">
+          <div class="p-2 border-b">
+            <input type="text" placeholder="Search..." class="w-full px-2 py-1 border rounded text-sm"
+              onkeyup="filterOptions(event, 'discountOption')" />
+          </div>
+          <div class="max-h-48 overflow-y-auto">
+            <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer discountOption">
+              <input type="checkbox" value="Group Discount" class="discount h-4 w-4 text-green-600"><span class="ml-2">Group Discount</span>
+            </label>
+            <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer discountOption">
+              <input type="checkbox" value="Coupon Discount" class="discount h-4 w-4 text-green-600"><span class="ml-2">Coupon Discount</span>
+            </label>
+            <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer discountOption">
+              <input type="checkbox" value="Loyalty Discount" class="discount h-4 w-4 text-green-600"><span class="ml-2">Loyalty Discount</span>
+            </label>
+          </div>
+        </div>
+      </div>
+	  
+	        <!-- Addon Multi-Select -->
+      <div class="relative">
+        <label class="block text-gray-700 font-medium mb-1">Addon</label>
+        <button onclick="toggleDropdown('addonDropdown')" type="button"
+          class="w-full border rounded-md px-3 py-2 flex justify-between items-center text-gray-700 bg-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <span id="addonSelected">Select Addon(s)</span>
+          <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        <div id="addonDropdown" class="hidden absolute mt-1 w-full bg-white border rounded-md shadow-lg z-10 max-h-60 overflow-y-auto">
+          <div class="p-2 border-b">
+            <input type="text" placeholder="Search..." class="w-full px-2 py-1 border rounded text-sm"
+              onkeyup="filterOptions(event, 'addonOption')" />
+          </div>
+          <div class="max-h-48 overflow-y-auto">
+            <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer addonOption">
+              <input type="checkbox" value="Libray" class="addon h-4 w-4 text-green-600"><span class="ml-2">Libray</span>
+            </label>
+            <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer addonOption">
+              <input type="checkbox" value="Zugad" class="addon h-4 w-4 text-green-600"><span class="ml-2">Zugad</span>
+            </label>
+            <label class="flex items-center px-3 py-2 hover:bg-gray-100 cursor-pointer addonOption">
+              <input type="checkbox" value="Locker" class="addon h-4 w-4 text-green-600"><span class="ml-2">Locker</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- Language -->
+      <div>
+        <label class="block text-gray-700 font-medium">Language <span class="text-red-500">*</span></label>
+        <select required class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+          <option value="">-- Select Language --</option>
+          <option>English</option>
+          <option>Hindi</option>
+          <option>Telugu</option>
+          <option>Tamil</option>
+        </select>
+      </div>
+
+      <!-- Movie Rating -->
+      <div>
+        <label class="block text-gray-700 font-medium">Movie Rating <span class="text-red-500">*</span></label>
+        <select required class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+          <option value="">-- Select Movie Rating --</option>
+          <option value="U">U (Universal)</option>
+          <option value="U/A">U/A (Parental Guidance)</option>
+          <option value="A">A (Adults Only)</option>
+          <option value="PG">PG (Parental Guidance Suggested)</option>
+          <option value="PG-13">PG-13 (Teens 13+)</option>
+          <option value="16+">16+</option>
+          <option value="18+">18+</option>
+        </select>
+      </div>
+
+      <!-- Genre -->
+      <div>
+        <label class="block text-gray-700 font-medium">Genre <span class="text-red-500">*</span></label>
+        <select required class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+          <option value="">-- Select Genre --</option>
+          <option value="Action">Action</option>
+          <option value="Adventure">Adventure</option>
+          <option value="Comedy">Comedy</option>
+          <option value="Drama">Drama</option>
+          <option value="Fantasy">Fantasy</option>
+          <option value="Horror">Horror</option>
+          <option value="Romance">Romance</option>
+          <option value="Sci-Fi">Science Fiction</option>
+          <option value="Thriller">Thriller</option>
+          <option value="Animation">Animation</option>
+          <option value="Documentary">Documentary</option>
+        </select>
+      </div>
+
+      <!-- Image Upload -->
+      <div>
+        <label class="block text-gray-700 font-medium">Upload Poster/Image <span class="text-red-500">*</span></label>
+        <input type="file" accept="image/*" id="imageUpload"
+               class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+        <img id="imagePreview" class="hidden mt-3 rounded-lg w-48 h-64 object-cover border shadow" />
+      </div>
+
+      <!-- Video Upload -->
+      <div>
+        <label class="block text-gray-700 font-medium">Upload Trailer/Video</label>
+        <input type="file" accept="video/*" id="videoUpload"
+               class="w-full mt-1 px-4 py-2 border rounded-lg focus:ring focus:ring-indigo-300">
+        <video id="videoPreview" class="hidden mt-3 w-full rounded-lg shadow" controls></video>
+      </div>
+
+      <!-- Channel -->
+      <div class="md:col-span-2">
+        <label class="block text-gray-700 font-medium">Channel <span class="text-red-500">*</span></label>
+        <div class="grid grid-cols-3 md:grid-cols-5 gap-2 mt-1">
+          <label><input type="checkbox" class="mr-2">Kiosk</label>
+          <label><input type="checkbox" class="mr-2">Web</label>
+          <label><input type="checkbox" class="mr-2">App</label>
+          <label><input type="checkbox" class="mr-2">POS</label>
+          <label><input type="checkbox" class="mr-2">OTA</label>
+        </div>
+      </div>
+
+      <!-- Buttons -->
+      <div class="md:col-span-3 flex justify-center space-x-4 pt-6">
+        <button type="button" class="px-4 py-2 rounded-lg bg-gray-500 hover:bg-gray-600 text-white font-medium">Cancel</button>
+        <button type="reset" class="px-4 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium">Reset</button>
+        <button type="submit" class="px-4 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium">Save</button>
+      </div>
+
+    </form>
+  </div>
+
+  <script>
+    // Image Preview
+    document.getElementById("imageUpload").addEventListener("change", function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function (e) {
+          const img = document.getElementById("imagePreview");
+          img.src = e.target.result;
+          img.classList.remove("hidden");
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+
+    // Video Preview
+    document.getElementById("videoUpload").addEventListener("change", function (event) {
+      const file = event.target.files[0];
+      if (file) {
+        const video = document.getElementById("videoPreview");
+        video.src = URL.createObjectURL(file);
+        video.classList.remove("hidden");
+      }
+    });
+
+    // Dropdown Logic
+    function toggleDropdown(id) {
+      document.getElementById(id).classList.toggle("hidden");
+    }
+
+    function filterOptions(event, className) {
+      const search = event.target.value.toLowerCase();
+      document.querySelectorAll("." + className).forEach(opt => {
+        const text = opt.innerText.toLowerCase();
+        opt.style.display = text.includes(search) ? "flex" : "none";
+      });
+    }
+
+    // Setup Multi-Selects
+    function setupMultiSelect(className, displayId) {
+      const checkboxes = document.querySelectorAll("." + className);
+      checkboxes.forEach(cb => {
+        cb.addEventListener("change", () => {
+          const selected = Array.from(checkboxes)
+            .filter(i => i.checked)
+            .map(i => i.value);
+          document.getElementById(displayId).innerText =
+            selected.length ? selected.join(", ") : "Select " + displayId.replace("Selected", "") + "(s)";
+        });
+      });
+    }
+
+    setupMultiSelect("timeslot", "timeslotSelected");
+    setupMultiSelect("discount", "discountSelected");
+	setupMultiSelect("addon", "addonSelected");
+
+    // Close dropdowns if clicked outside
+    window.addEventListener("click", function (e) {
+      if (!e.target.closest(".relative")) {
+        document.querySelectorAll("#timeslotDropdown, #discountDropdown,#addonDropdown").forEach(dd => dd.classList.add("hidden"));
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en" x-data="masterForm()">
+<head>
+    <meta charset="UTF-8">
+    <title>Events Master Data</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/alpinejs" defer></script>
+</head>
+<body class="bg-gray-100 min-h-screen p-6">
+
+<div class="max-w-7xl mx-auto bg-white shadow-xl rounded-2xl p-8">
+    <h1 class="text-3xl font-bold text-gray-800 mb-4">Events Master Data</h1>
+    <p class="text-sm text-gray-500 mb-6">Manage all event details, pricing, workshops, slots, and add-ons.</p>
+
+    <form @submit.prevent="saveEvent" class="space-y-8">
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+		
+		 <div>
+                <label class="block font-medium">Product Code <span class="text-red-500">*</span></label>
+                <input type="text" x-model="newEvent.name" class="w-full border rounded px-3 py-2">
+            </div>
+
+            
+            <div>
+                <label class="block font-medium">Product Name <span class="text-red-500">*</span></label>
+                <input type="text" x-model="newEvent.name" class="w-full border rounded px-3 py-2">
+            </div>
+
+            <div>
+                <label class="block font-medium">Description <span class="text-red-500">*</span></label>
+                <textarea x-model="newEvent.description" class="w-full border rounded px-3 py-2"></textarea>
+            </div>
+            
+            <div>
+                <label class="block font-medium">Event Location <span class="text-red-500">*</span></label>
+                <select x-model="newEvent.location" class="w-full border rounded px-3 py-2">
+                    <option value="">-- Select Location --</option>
+                    <option value="space1">Space 1</option>
+                    <option value="space2">Space 2</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 border rounded p-3 md:grid-cols-3 gap-6">
+            
+            <div>
+                <label class="block font-medium">Tax Type <span class="text-red-500">*</span></label>
+                <select x-model="newEvent.gstType" class="w-full border rounded px-3 py-2">
+                    <option value="inclusive">Inclusive</option>
+                    <option value="exclusive">Exclusive</option>
+                </select>
+            </div>
+
+            <div>
+            <div>
+                <label class="block font-medium">TAX <span class="text-red-500">*</span></label>
+                <input type="text" x-model="newEvent.hsn" class="w-full border rounded px-3 py-2">
+            </div>
+            </div>
+
+            <div>
+                <label class="block font-medium">Base Price (₹)</label>
+                <input type="number" x-model.number="newEvent.basePrice" min="0" class="w-full border rounded px-3 py-2">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label class="block font-medium">Event FPR</label>
+                <input type="text" x-model="newEvent.fpr" class="w-full border rounded px-3 py-2">
+            </div>
+
+            <div>
+                <label class="block font-medium">HSN Code <span class="text-red-500">*</span></label>
+                <input type="text" x-model="newEvent.hsn" class="w-full border rounded px-3 py-2">
+            </div>
+            
+            <div>
+                <div class="grid grid-cols-2 border rounded p-3 gap-4 mt-2">
+                    
+                    <div>
+                        <label class="block font-medium">Min Capacity <span class="text-red-500">*</span></label>
+                        <input type="number" x-model.number="newEvent.minCapacity" min="0" class="w-full border rounded px-3 py-2">
+                    </div>
+                    <div>
+                        <label class="block font-medium">Max Capacity <span class="text-red-500">*</span></label>
+                        <input type="number" x-model.number="newEvent.maxCapacity" min="0" class="w-full border rounded px-3 py-2">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+                <label class="block font-medium">Available Dates <span class="text-red-500">*</span></label>
+                <div class="flex flex-wrap gap-2 mb-2">
+                    <template x-for="date in newEvent.dates" :key="date">
+                        <span class="bg-gray-200 rounded-full px-3 py-1 text-sm flex items-center gap-2">
+                            <span x-text="date"></span>
+                            <button type="button" @click="removeDate(date)" class="text-red-500 hover:text-red-700">&times;</button>
+                        </span>
+                    </template>
+                </div>
+                <div class="flex gap-2">
+                    <input type="date" x-model="newDate" class="w-full border rounded px-3 py-2">
+                    <button type="button" @click="addDate" class="bg-blue-600 text-white rounded px-4 py-2">+</button>
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-medium">Activation Start Date <span class="text-red-500">*</span></label>
+                <input type="date" x-model="newEvent.startDate" class="w-full border rounded px-3 py-2">
+            </div>
+
+            <div>
+                <label class="block font-medium">Activation End Date <span class="text-red-500">*</span></label>
+                <input type="date" x-model="newEvent.endDate" class="w-full border rounded px-3 py-2">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+                <label class="block font-medium">Event Start Time <span class="text-red-500">*</span></label>
+                <input type="time" x-model="newEvent.startTime" class="w-full border rounded px-3 py-2">
+            </div>
+            <div>
+                <label class="block font-medium">Event End Time <span class="text-red-500">*</span></label>
+                <input type="time" x-model="newEvent.endTime" class="w-full border rounded px-3 py-2">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+
+            <div>
+                <label class="block font-medium">Workshops <span class="text-red-500">*</span></label>
+                <div class="relative">
+                    <div @click="openWorkshopDropdown = !openWorkshopDropdown" class="w-full border rounded px-3 py-2 cursor-pointer bg-white">
+                        <span x-text="selectedItemsText(newEvent.workshops, allWorkshops, 'name', 'Select Workshops')"></span>
+                    </div>
+                    <div x-show="openWorkshopDropdown" @click.away="openWorkshopDropdown = false"
+                        class="absolute mt-1 w-full bg-white border rounded-md shadow-lg z-10 p-2 max-h-60 overflow-y-auto">
+                        <template x-for="item in allWorkshops" :key="item.id">
+                            <label class="flex items-center gap-2 mb-1">
+                                <input type="checkbox" :value="item.id" @change="toggleItem(item, 'workshops')" :checked="isItemSelected(item.id, newEvent.workshops)">
+                                <span x-text="`${item.name} (₹${item.price})`"></span>
+                            </label>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-medium">Add-ons</label>
+                <div class="relative">
+                    <div @click="openAddonDropdown = !openAddonDropdown" class="w-full border rounded px-3 py-2 cursor-pointer bg-white">
+                        <span x-text="selectedItemsText(newEvent.addons, allAddons, 'name', 'Select Add-ons')"></span>
+                    </div>
+                    <div x-show="openAddonDropdown" @click.away="openAddonDropdown = false"
+                        class="absolute mt-1 w-full bg-white border rounded-md shadow-lg z-10 p-2 max-h-60 overflow-y-auto">
+                        <template x-for="item in allAddons" :key="item.id">
+                            <label class="flex items-center gap-2 mb-1">
+                                <input type="checkbox" :value="item.id" @change="toggleItem(item, 'addons')" :checked="isItemSelected(item.id, newEvent.addons)">
+                                <span x-text="`${item.name} (₹${item.price})`"></span>
+                            </label>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-medium">Discounts</label>
+                <div class="relative">
+                    <div @click="openDiscountDropdown = !openDiscountDropdown" class="w-full border rounded px-3 py-2 cursor-pointer bg-white">
+                        <span x-text="selectedItemsText(newEvent.discounts, allDiscounts, 'name', 'Select Discounts')"></span>
+                    </div>
+                    <div x-show="openDiscountDropdown" @click.away="openDiscountDropdown = false"
+                        class="absolute mt-1 w-full bg-white border rounded-md shadow-lg z-10 p-2 max-h-60 overflow-y-auto">
+                        <template x-for="item in allDiscounts" :key="item.id">
+                            <label class="flex items-center gap-2 mb-1">
+                                <input type="checkbox" :value="item.id" @change="toggleItem(item, 'discounts')" :checked="isItemSelected(item.id, newEvent.discounts)">
+                                <span x-text="`${item.name} (${item.value}%)`"></span>
+                            </label>
+                        </template>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
+<!-- Age Groups -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold mb-2">Select Age Groups</h3>
+        <div class="flex gap-4 flex-wrap">
+          <label><input type="checkbox" onclick="toggleSelection('age','0-6')"> 0-6</label>
+          <label><input type="checkbox" onclick="toggleSelection('age','7-10')"> 7-10</label>
+          <label><input type="checkbox" onclick="toggleSelection('age','11-17')"> 11-17</label>
+          <label><input type="checkbox" onclick="toggleSelection('age','18+')"> 18+</label>
+        </div>
+      </div>
+
+      <!-- Plan Types -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold mb-2">Select Types</h3>
+        <div class="flex gap-4 flex-wrap">
+          <label><input type="checkbox" onclick="toggleSelection('plan','NGO')"> NGO</label>
+          <label><input type="checkbox" onclick="toggleSelection('plan','School')"> School</label>
+          <label><input type="checkbox" onclick="toggleSelection('plan','Corporate')"> Corporate</label>
+          <label><input type="checkbox" onclick="toggleSelection('plan','Govt School')"> Govt School</label>
+        </div>
+      </div>
+
+      <!-- Time Slots -->
+      <div class="mb-6">
+        <h3 class="text-lg font-semibold mb-2">Select Time Slots</h3>
+        <div class="flex gap-4 flex-wrap">
+          <label><input type="checkbox" onclick="toggleSelection('slot','10:00-11:00')"> 10:00-11:00</label>
+          <label><input type="checkbox" onclick="toggleSelection('slot','12:00-13:00')"> 12:00-13:00</label>
+          <label><input type="checkbox" onclick="toggleSelection('slot','14:00-15:00')"> 14:00-15:00</label>
+        </div>
+      </div>
+
+      <!-- Pricing Matrix -->
+      <div id="pricingUI" class="mt-6">
+        <p class="text-gray-500 italic">Select Age Group(s), Plan(s), and Time Slot(s) to define pricing.</p>
+      </div>
+
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-4">
+            <div>
+                <label class="block font-medium">Image (optional)</label>
+                <input type="file" @change="previewImage($event)" class="mt-1 w-full" accept="image/*" />
+                <div x-show="imgPreviewTag" class="mt-3">
+                    <img :src="imgPreviewTag" class="w-44 h-28 object-cover rounded border" alt="preview">
+                    <div>
+                        <button type="button" @click="removeImage()" class="mt-2 text-xs text-red-600">Remove image</button>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-medium">Video URL</label>
+                <input type="url" x-model="newEvent.videoUrl" placeholder="https://youtube.com/..." class="mt-1 block w-full border rounded px-3 py-2" />
+            </div>
+            
+            <div class="col-span-full md:col-span-1">
+                <label class="block font-medium">Channels</label>
+                <div class="flex gap-3 mt-2 flex-wrap">
+                    <template x-for="ch in allChannels" :key="ch.id">
+                        <label class="inline-flex items-center gap-2">
+                            <input type="checkbox" :value="ch.id" @change="toggleItem(ch,'channels')" :checked="isItemSelected(ch.id,newEvent.channels)">
+                            <span x-text="ch.label"></span>
+                        </label>
+                    </template>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="flex items-center justify-between mt-6">
+            <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" x-model="newEvent.active" class="sr-only peer">
+                <div class="w-14 h-7 bg-red-400 peer-checked:bg-green-500 rounded-full relative transition-colors">
+                    <span class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-7"></span>
+                </div>
+                <span class="ml-3 text-gray-700 font-medium">Active</span>
+            </label>
+
+            <div class="flex gap-4">
+                <button type="button" id="btnCancel" class="px-5 py-2 rounded-lg bg-gray-500 hover:bg-gray-600 text-white font-medium">Cancel</button>
+                <button type="reset" class="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium">Reset</button>
+                <button type="submit" class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium">Save</button>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script>
+function masterForm() {
+    return {
+        newEvent: {
+            name: '',
+            location: '',
+            description: '',
+            gstType: '',
+            // Changed to null/empty string to prevent default selection of '0'
+            gstRate: '', 
+            basePrice: 0,
+            fpr: '',
+            hsn: '',
+            dates: [],
+            startDate: '',
+            endDate: '',
+            startTime: '',
+            endTime: '',
+            workshops: [],
+            addons: [],
+            // agePricing now holds the full matrix data
+            agePricing: [], 
+            minCapacity: 0,
+            maxCapacity: 0,
+            discounts: [],
+            videoUrl: '',
+            channels: [],
+            active: true
+        },
+        newDate: '',
+        openWorkshopDropdown: false,
+        openAddonDropdown: false,
+        openDiscountDropdown: false,
+        imgPreviewTag: null,
+        
+        // Data for multi-selects
+        allWorkshops: [
+            {id: 1, name: 'Painting', price: 200},
+            {id: 2, name: 'Robotics', price: 500},
+            {id: 3, name: 'Dance', price: 300}
+        ],
+        allAddons: [
+            {id: 1, name: 'Snacks', price: 50},
+            {id: 2, name: 'Drinks', price: 80},
+            {id: 3, name: 'VIP Seat', price: 200}
+        ],
+        allDiscounts: [
+            {id:1,name:'Dharohar10',value:10},
+            {id:2,name:'SecureEmployee40',value:40}
+        ],
+        allChannels: [
+            {id: 1,label:'WEB'},{id:2,label:'OTA'},{id:3,label:'APP'},{id:4,label:'KIOSK'}
+        ],
+
+        // Data for Age/Plan Matrix
+        ageGroups: ['0-6', '7-10', '11-17', '18+'],
+        plans: ['NGO', 'School', 'Corporate', 'Govt School'],
+        selectedAges: [],
+        selectedPlans: [],
+
+        // --- Core Methods ---
+        
+        addDate() {
+            if (this.newDate && !this.newEvent.dates.includes(this.newDate)) {
+                this.newEvent.dates.push(this.newDate);
+                this.newDate = '';
+            }
+        },
+        removeDate(date) {
+            this.newEvent.dates = this.newEvent.dates.filter(d => d !== date);
+        },
+        
+        // Multi-select/channel toggle logic
+        toggleItem(item, type) {
+            let list = this.newEvent[type];
+            if (list.includes(item.id)) {
+                this.newEvent[type] = list.filter(i => i !== item.id);
+            } else {
+                this.newEvent[type].push(item.id);
+            }
+        },
+        isItemSelected(id, list) {
+            return list.includes(id);
+        },
+        selectedItemsText(selectedIds, allItems, labelField, placeholder) {
+            if (!selectedIds.length) return placeholder;
+            // Use find instead of filter and map for better performance on large lists, though map is fine here.
+            return allItems.filter(i => selectedIds.includes(i.id)).map(i => i[labelField]).join(', ');
+        },
+
+        // Image handling
+        previewImage(event) {
+            let file = event.target.files[0];
+            if(file) this.imgPreviewTag = URL.createObjectURL(file);
+        },
+        removeImage() {
+            this.imgPreviewTag = null;
+        },
+
+        // --- Age/Plan Matrix Logic ---
+
+        toggleSelection(type, value) {
+            let targetArray = type === 'age' ? this.selectedAges : this.selectedPlans;
+            if (targetArray.includes(value)) {
+                // Remove value
+                if (type === 'age') {
+                    this.selectedAges = targetArray.filter(v => v !== value);
+                } else {
+                    this.selectedPlans = targetArray.filter(v => v !== value);
+                }
+                // Also clean up agePricing
+                this.cleanAgePricing(type, value);
+            } else {
+                // Add value
+                if (type === 'age') {
+                    this.selectedAges.push(value);
+                } else {
+                    this.selectedPlans.push(value);
+                }
+                // Alpine handles reactivity, no need for manual UI build
+            }
+        },
+
+        // Cleans up the newEvent.agePricing array when a selection is removed
+        cleanAgePricing(type, value) {
+            this.newEvent.agePricing = this.newEvent.agePricing.filter(item => {
+                if (type === 'age') return item.ageGroup !== value;
+                if (type === 'plan') return item.plan !== value;
+                return true;
+            });
+        },
+
+        // Gets the price or active status for a specific age/plan combination
+        getPricingValue(age, plan, field) {
+            const item = this.newEvent.agePricing.find(ap => ap.ageGroup === age && ap.plan === plan);
+            // Default to 0 for price and true for active if not found
+            if (!item) return field === 'active' ? true : 0; 
+            return field === 'active' ? item.active : item.price;
+        },
+
+        // Updates or creates an entry in the newEvent.agePricing array
+        updatePricing(age, plan, field, value) {
+            let item = this.newEvent.agePricing.find(ap => ap.ageGroup === age && ap.plan === plan);
+            
+            if (!item) {
+                // Create a new entry if it doesn't exist
+                item = {
+                    ageGroup: age,
+                    plan: plan,
+                    price: 0,
+                    active: true,
+                };
+                this.newEvent.agePricing.push(item);
+            }
+
+            // Update the specific field
+            if (field === 'price') {
+                item.price = Number(value);
+            } else if (field === 'active') {
+                item.active = value;
+            }
+
+            // Ensure reactivity by replacing the item in the array
+            this.newEvent.agePricing = this.newEvent.agePricing.map(ap => ap.ageGroup === age && ap.plan === plan ? item : ap);
+        },
+
+        // --- Save Event ---
+        saveEvent() {
+            // Final check on agePricing to ensure only selected and valid items are kept
+            this.newEvent.agePricing = this.newEvent.agePricing.filter(item => 
+                this.selectedAges.includes(item.ageGroup) && 
+                this.selectedPlans.includes(item.plan)
+            ).map(item => ({
+                ...item,
+                price: Number(item.price),
+                active: Boolean(item.active)
+            }));
+
+
+            console.log("Event Data:", this.newEvent);
+            alert("Event saved! Check console for details.");
+        }
+    }
+}
+</script>
+
+  <script>
+    let selectedAges = [];
+    let selectedPlans = [];
+    let selectedSlots = [];
+
+    function toggleArray(arr, val) {
+      return arr.includes(val) ? arr.filter(v => v !== val) : [...arr, val];
+    }
+
+    function toggleSelection(type, value) {
+      if(type === 'age') selectedAges = toggleArray(selectedAges, value);
+      else if(type === 'plan') selectedPlans = toggleArray(selectedPlans, value);
+      else if(type === 'slot') selectedSlots = toggleArray(selectedSlots, value);
+      buildPricingUI();
+    }
+
+    function buildPricingUI() {
+      const wrap = document.getElementById('pricingUI');
+      wrap.innerHTML = '';
+
+      if (!selectedAges.length || !selectedPlans.length || !selectedSlots.length) {
+        wrap.innerHTML = `<p class="text-gray-500 italic">Select Age Group(s), Plan(s), and Time Slot(s) to define pricing.</p>`;
+        return;
+      }
+
+      const table = document.createElement('table');
+      table.className = 'w-full border text-sm shadow-md';
+
+      // Table Header
+      const thead = document.createElement('thead');
+      thead.className = 'bg-gray-50';
+      thead.innerHTML = `<tr>
+        <th class="border px-2 py-1">Age \\ Plan \\ Slot</th>
+        ${selectedPlans.map(p=>`<th class="border px-2 py-1">${p}</th>`).join('')}
+      </tr>`;
+      table.appendChild(thead);
+
+      // Table Body
+      const tbody = document.createElement('tbody');
+      selectedAges.forEach(age => {
+        selectedSlots.forEach(slot => {
+          const tr = document.createElement('tr');
+          tr.className = 'hover:bg-gray-50';
+          tr.innerHTML = `<td class="border px-2 py-1 font-medium bg-gray-100">
+            ${age} <br><span class="text-xs text-gray-500">${slot}</span></td>` +
+            selectedPlans.map(plan => `
+              <td class="border px-2 py-1 text-center">
+                <input type="number" min="0" class="priceInput w-20 border rounded px-1 mb-1" 
+                       data-age="${age}" data-plan="${plan}" data-slot="${slot}" placeholder="₹">
+                <label class="text-xs flex items-center justify-center gap-1">
+                  <input type="checkbox" class="activeToggle" data-age="${age}" data-plan="${plan}" data-slot="${slot}" checked> Active
+                </label>
+              </td>`).join('');
+          tbody.appendChild(tr);
+        });
+      });
+
+      table.appendChild(tbody);
+      wrap.appendChild(table);
+    }
+
+    document.addEventListener('DOMContentLoaded', buildPricingUI);
+
+         document.getElementById("btnCancel").addEventListener("click", function () {
+    if (confirm("Are you sure you want to cancel and go back to the main page?")) {
+      // Replace with your main page URL
+      window.location.href = "{% url 'dashboard' %}"; 
+      // or if plain HTML: window.location.href = "index.html";
+    }
+  });
+  </script>
+</body>
+</html>

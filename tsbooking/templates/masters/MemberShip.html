@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Membership Master</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .req::after { content:" *"; color:#dc2626; }
+</style>
+</head>
+<body class="bg-gray-50 min-h-screen py-8">
+
+<div class="max-w-7xl mx-auto px-4">
+  <div class="bg-white shadow rounded-lg overflow-hidden">
+
+    <!-- Header -->
+    <div class="px-6 py-5 bg-white rounded-t-lg border-b-4 border-blue-500 shadow">
+      <h1 class="text-2xl font-semibold">Membership Master</h1>
+      <p class="text-sm text-gray-500 mt-1">
+        Define membership plans, pricing, validity, channels, discounts, addons, and age group.
+      </p>
+    </div>
+
+    <!-- Form -->
+    <form id="planForm" class="grid grid-cols-1 md:grid-cols-4 gap-6 p-6">
+
+      <!-- Row 1 -->
+      <div>
+        <label class="block font-medium req">Product Code</label>
+        <input type="text" id="productCode" placeholder="Unique Product Code"
+          class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+      <div>
+        <label class="block font-medium req">Product Name</label>
+        <input type="text" id="productName" placeholder="Unique Product Name"
+          class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+      <div>
+        <label class="block font-medium req">Base Price (₹)</label>
+        <input type="number" id="price" min="1"
+          class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+      <div>
+        <label class="block font-medium req">Select Membership Type</label>
+        <select id="membershipType" class="mt-1 w-full border rounded px-3 py-2">
+          <option value="">-- Select Type --</option>
+          <option value="Regular">Regular</option>
+          <option value="Group">Group</option>
+          <option value="Co-Working">Co-Working</option>
+        </select>
+      </div>
+
+      <!-- Discounts -->
+      <div>
+        <label class="block font-medium">Discounts</label>
+        <button type="button" id="discountBtn"
+          class="dropdown-btn w-full border rounded px-3 py-2 text-left">-- Select Discounts --</button>
+        <div id="discountDropdown"
+          class="absolute z-10 mt-1 w-full bg-white border rounded shadow hidden max-h-52 overflow-y-auto">
+          <label class="flex items-center px-3 py-2"><input type="checkbox" class="discountCheckbox mr-2"
+              value="10% OFF"> Dharohar 10% OFF</label>
+          <label class="flex items-center px-3 py-2"><input type="checkbox" class="discountCheckbox mr-2"
+              value="20% OFF"> TS 20% OFF</label>
+          <label class="flex items-center px-3 py-2"><input type="checkbox" class="discountCheckbox mr-2"
+              value="30% OFF"> SecureEmp 30% OFF</label>
+        </div>
+      </div>
+
+      <!-- Description -->
+      <div class="md:col-span-3">
+        <label class="block font-medium">Description</label>
+        <textarea id="planDesc" rows="3" placeholder="Optional description"
+          class="mt-1 w-full border rounded px-3 py-2"></textarea>
+      </div>
+
+      <!-- Age & Plan Selection -->
+     <!-- <div class="md:col-span-4 border-t pt-4">
+        <h3 class="text-lg font-semibold mb-2">Select Age Groups</h3>
+        <div class="flex gap-4 flex-wrap mb-4">
+          <label><input type="checkbox" onclick="toggleSelection('age','0-6')"> 0-6</label>
+          <label><input type="checkbox" onclick="toggleSelection('age','7-10')"> 7-10</label>
+          <label><input type="checkbox" onclick="toggleSelection('age','11-17')"> 11-17</label>
+          <label><input type="checkbox" onclick="toggleSelection('age','18+')"> 18+</label>
+        </div>
+        <h3 class="text-lg font-semibold mb-2">Select Types</h3>
+        <div class="flex gap-4 flex-wrap mb-4">
+          <label><input type="checkbox" onclick="toggleSelection('plan','NGO')"> NGO</label>
+          <label><input type="checkbox" onclick="toggleSelection('plan','School')"> School</label>
+          <label><input type="checkbox" onclick="toggleSelection('plan','Corporate')"> Corporate</label>
+          <label><input type="checkbox" onclick="toggleSelection('plan','Govt School')"> Govt School</label>
+        </div>
+        <div id="pricingUI" class="mt-4">
+          <p class="text-gray-500 italic">Select Age Group(s) and Plan(s) to define pricing.</p>
+        </div>
+      </div> -->
+
+<!-- Plan Duration with Price -->
+<div>
+  <label class="block font-medium req">Plan Duration</label>
+  <div class="relative">
+    <button type="button" id="planBtn"
+      class="dropdown-btn w-full border rounded px-3 py-2 text-left">-- Select Plan Duration --</button>
+    <div id="planDropdown"
+      class="absolute z-10 mt-1 w-full bg-white border rounded shadow hidden max-h-52 overflow-y-auto">
+      
+      <div class="flex items-center justify-between px-3 py-2 border-b">
+        <label class="flex items-center gap-2">
+          <input type="checkbox" class="planCheckbox" value="3 Months"> 3 Months
+        </label>
+        <input type="number" class="planPrice w-20 border rounded px-2 py-1" placeholder="₹">
+      </div>
+
+      <div class="flex items-center justify-between px-3 py-2 border-b">
+        <label class="flex items-center gap-2">
+          <input type="checkbox" class="planCheckbox" value="6 Months"> 6 Months
+        </label>
+        <input type="number" class="planPrice w-20 border rounded px-2 py-1" placeholder="₹">
+      </div>
+
+      <div class="flex items-center justify-between px-3 py-2">
+        <label class="flex items-center gap-2">
+          <input type="checkbox" class="planCheckbox" value="12 Months"> 12 Months
+        </label>
+        <input type="number" class="planPrice w-20 border rounded px-2 py-1" placeholder="₹">
+      </div>
+
+    </div>
+  </div>
+</div>
+      <!-- Conditional Fields -->
+      <div id="minMembersDiv">
+        <label class="block font-medium req">Min Members</label>
+        <input type="number" id="minMembers" class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+      <div id="maxMembersDiv">
+        <label class="block font-medium req">Max Members</label>
+        <input type="number" id="maxMembers" class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+      <div id="maxEntriesDiv" class="hidden">
+        <label class="block font-medium req">Max No of Entries</label>
+        <input type="number" id="maxEntries" min="1" class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+      <div id="maxVisitorsDiv" class="hidden">
+        <label class="block font-medium req">No of Visitors</label>
+        <input type="number" id="maxVisitors" min="1" class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+      <div id="partnershipDiv" class="hidden">
+        <label class="block font-medium">Partnership</label>
+        <label class="relative inline-flex items-center cursor-pointer mt-1">
+          <input type="checkbox" id="partnershipToggle" class="sr-only peer">
+          <div class="w-14 h-7 bg-red-400 peer-checked:bg-green-500 rounded-full relative transition-colors">
+            <span class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-7"></span>
+          </div>
+          <span class="ml-3 text-gray-700 font-medium">Active</span>
+        </label>
+      </div>
+
+      <!-- Addons -->
+      <div>
+        <label class="block font-medium">Addons</label>
+        <button type="button" id="addonBtn"
+          class="dropdown-btn w-full border rounded px-3 py-2 text-left">-- Select Addons --</button>
+        <div id="addonDropdown"
+          class="absolute z-10 mt-1 w-full bg-white border rounded shadow hidden max-h-52 overflow-y-auto">
+          <label class="flex justify-between items-center px-3 py-2 border-b"><span><input type="checkbox"
+                class="addonCheckbox mr-2" value="Locker"> Locker</span><span>₹100</span></label>
+          <label class="flex justify-between items-center px-3 py-2 border-b"><span><input type="checkbox"
+                class="addonCheckbox mr-2" value="Parking"> Parking</span><span>₹200</span></label>
+          <label class="flex justify-between items-center px-3 py-2 border-b"><span><input type="checkbox"
+                class="addonCheckbox mr-2" value="Internet"> Internet</span><span>₹300</span></label>
+          <label class="flex justify-between items-center px-3 py-2"><span><input type="checkbox"
+                class="addonCheckbox mr-2" value="Snacks"> Snacks</span><span>₹150</span></label>
+        </div>
+      </div>
+
+      <!-- GST, HSN, Capacity -->
+      <div>
+        <label class="block font-medium req">Tax Type</label>
+        <select id="gstSelect" class="mt-1 w-full border rounded px-3 py-2">
+          <option value="5">Inclusive</option>
+          <option value="28">Exclusive</option>
+        </select>
+      </div>
+	   <div>
+        <label class="block font-medium req">Tax %</label>
+        <input type="text" id="hsn" class="mt-1 w-full border rounded px-3 py-2"
+          placeholder="Auto-filled based on GST" readonly>
+      </div>
+      <div>
+        <label class="block font-medium req">HSN Code</label>
+        <input type="text" id="hsn" class="mt-1 w-full border rounded px-3 py-2"
+          placeholder="Auto-filled based on GST" readonly>
+      </div>
+      <div>
+        <label class="block font-medium req">Capacity</label>
+        <input type="number" id="capacity" min="1" class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+
+      <!-- Dates -->
+      <div>
+        <label class="block font-medium req">Activation Start Date</label>
+        <input type="date" id="activationStartDate"
+          class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+      <div>
+        <label class="block font-medium req">Activation End Date</label>
+        <input type="date" id="activationEndDate"
+          class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+      <div>
+        <label class="block font-medium req">Booking Start Date</label>
+        <input type="date" id="startDate"
+          class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+      <div>
+        <label class="block font-medium req">Booking End Date</label>
+        <input type="date" id="endDate"
+          class="mt-1 w-full border rounded px-3 py-2">
+      </div>
+
+      <!-- Image -->
+      <div>
+        <label class="block font-medium text-gray-700">Image (optional)</label>
+        <input id="imageFile" type="file" accept="image/*" class="mt-1 block w-full" />
+        <div id="imgPreview" class="mt-3 hidden">
+          <img id="imgPreviewTag" class="w-44 h-28 object-cover rounded border" alt="preview">
+          <div>
+            <button id="removeImage" type="button" class="mt-2 text-xs text-red-600">Remove image</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Video -->
+      <div>
+        <label class="block font-medium text-gray-700">Video URL (optional)</label>
+        <input id="videoUrl" type="url" placeholder="https://youtube.com/..."
+          class="mt-1 block w-full border rounded px-3 py-2" />
+      </div>
+
+      <!-- Channels -->
+      <div>
+        <label class="block font-medium">Channels</label>
+        <div class="flex gap-3 mt-2 flex-wrap">
+          <label class="inline-flex items-center gap-2"><input type="checkbox" class="channel" value="WEB"> WEB</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" class="channel" value="POS"> POS</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" class="channel" value="APP"> APP</label>
+          <label class="inline-flex items-center gap-2"><input type="checkbox" class="channel" value="KIOSK"> KIOSK</label>
+        </div>
+      </div>
+
+      <!-- Active -->
+      <div class="flex justify-center pt-6 col-span-4">
+        <label class="relative inline-flex items-center cursor-pointer">
+          <input type="checkbox" id="is_active" name="is_active" value="1" checked class="sr-only peer">
+          <div
+            class="w-14 h-7 bg-red-400 peer-checked:bg-green-500 rounded-full relative transition-colors">
+            <span
+              class="absolute left-1 top-1 w-5 h-5 bg-white rounded-full transition-all peer-checked:translate-x-7"></span>
+          </div>
+          <span class="ml-3 text-gray-700 font-medium">Active</span>
+        </label>
+      </div>
+
+    </form>
+
+    <!-- Buttons -->
+    <div class="flex justify-center gap-4 pt-6 pb-6">
+      <button type="button"
+        class="px-5 py-2 rounded-lg bg-gray-500 hover:bg-gray-600 text-white font-medium">Cancel</button>
+      <button type="reset"
+        class="px-5 py-2 rounded-lg bg-red-500 hover:bg-red-600 text-white font-medium">Reset</button>
+      <button type="submit" form="planForm"
+        class="px-5 py-2 rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white font-medium">Save</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Scripts -->
+<script>
+  // GST -> HSN
+  const gstSelect = document.getElementById("gstSelect");
+  const hsnInput = document.getElementById("hsn");
+  const gstToHSN = { "5": "9985", "18": "9986", "28": "9987" };
+  gstSelect?.addEventListener("change", () => {
+    hsnInput.value = gstToHSN[gstSelect.value] || "";
+  });
+
+  // Dropdown util
+  function setupDropdown(btnId, dropdownId, checkboxClass) {
+    const btn = document.getElementById(btnId);
+    const dropdown = document.getElementById(dropdownId);
+    btn.addEventListener("click", () => dropdown.classList.toggle("hidden"));
+    document.addEventListener("change", e => {
+      if (e.target.classList.contains(checkboxClass)) {
+        const selected = Array.from(document.querySelectorAll(`.${checkboxClass}:checked`))
+          .map(c => c.value);
+        btn.textContent = selected.length ? selected.join(", ") : btn.getAttribute("data-default");
+      }
+    });
+    document.addEventListener("click", e => {
+      if (!btn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.add("hidden");
+      }
+    });
+    btn.setAttribute("data-default", btn.textContent);
+  }
+  setupDropdown("discountBtn", "discountDropdown", "discountCheckbox");
+  setupDropdown("addonBtn", "addonDropdown", "addonCheckbox");
+
+
+  // Membership Type conditions
+  const membershipType = document.getElementById('membershipType');
+  const minMembersDiv = document.getElementById('minMembersDiv');
+  const maxMembersDiv = document.getElementById('maxMembersDiv');
+  const maxEntriesDiv = document.getElementById('maxEntriesDiv');
+  const maxVisitorsDiv = document.getElementById('maxVisitorsDiv');
+  const partnershipDiv = document.getElementById('partnershipDiv');
+
+  minMembersDiv.style.display = 'none';
+  maxMembersDiv.style.display = 'none';
+  maxEntriesDiv.style.display = 'none';
+  maxVisitorsDiv.style.display = 'none';
+  partnershipDiv.style.display = 'none';
+
+  membershipType.addEventListener('change', () => {
+    const type = membershipType.value;
+    minMembersDiv.style.display = 'none';
+    maxMembersDiv.style.display = 'none';
+    maxEntriesDiv.style.display = 'none';
+    maxVisitorsDiv.style.display = 'none';
+    partnershipDiv.style.display = 'none';
+
+    if (type === 'Group') {
+      minMembersDiv.style.display = 'block';
+      maxMembersDiv.style.display = 'block';
+      document.getElementById('minMembers').value = '2';
+      document.getElementById('maxMembers').value = '10';
+    } else if (type === 'Regular') {
+      maxEntriesDiv.style.display = 'block';
+      maxVisitorsDiv.style.display = 'block';
+    } else if (type === 'Co-Working') {
+      partnershipDiv.style.display = 'block';
+    }
+  });
+
+  // Dates
+  const today = new Date().toISOString().split('T')[0];
+  document.getElementById("startDate").value = today;
+  const laterDate = new Date();
+  laterDate.setDate(laterDate.getDate() + 30);
+  document.getElementById("endDate").value = laterDate.toISOString().split('T')[0];
+</script>
+
+<script>
+  let selectedAges = [];
+  let selectedPlans = [];
+
+  function toggleSelection(type, value) {
+    if (type === 'age') {
+      selectedAges = toggleArray(selectedAges, value);
+    } else {
+      selectedPlans = toggleArray(selectedPlans, value);
+    }
+    buildPricingUI();
+  }
+  function toggleArray(arr, val) {
+    return arr.includes(val) ? arr.filter(v => v !== val) : [...arr, val];
+  }
+
+  function buildPricingUI() {
+    const wrap = document.getElementById('pricingUI');
+    wrap.innerHTML = '';
+    if (!selectedAges.length || !selectedPlans.length) {
+      wrap.innerHTML = `<p class="text-gray-500 italic">Select Age Group(s) and Plan(s) to define pricing.</p>`;
+      return;
+    }
+    const table = document.createElement('table');
+    table.className = 'w-full border text-sm';
+    const thead = document.createElement('thead');
+    thead.innerHTML = `<tr><th class="border px-2 py-1">Age \\ Plan</th>${selectedPlans.map(p => `<th class="border px-2 py-1">${p}</th>`).join('')}</tr>`;
+    table.appendChild(thead);
+    const tbody = document.createElement('tbody');
+    selectedAges.forEach(a => {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `<td class="border px-2 py-1 font-medium">${a}</td>` +
+        selectedPlans.map(p => `
+          <td class="border px-2 py-1">
+            <input type="number" min="0" class="priceInput w-20 border rounded px-1 mb-1" data-age="${a}" data-plan="${p}" placeholder="₹">
+            <label class="text-xs flex items-center gap-1">
+              <input type="checkbox" class="activeToggle" data-age="${a}" data-plan="${p}" checked> Active
+            </label>
+          </td>`).join('');
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+  }
+</script>
+
+<script>
+  // Dropdown setup for Plan Duration
+  setupDropdown("planBtn", "planDropdown", "planCheckbox");
+
+  // Update button text to show selected plans with prices
+  const planDropdown = document.getElementById("planDropdown");
+  const planBtn = document.getElementById("planBtn");
+
+  planDropdown.querySelectorAll(".planCheckbox, .planPrice").forEach(el => {
+    el.addEventListener("input", updatePlanBtnText);
+  });
+
+  function updatePlanBtnText() {
+    const selected = Array.from(planDropdown.querySelectorAll(".planCheckbox:checked"))
+      .map(cb => {
+        const priceInput = cb.parentElement.nextElementSibling;
+        const price = priceInput ? priceInput.value : "";
+        return price ? `${cb.value} ₹${price}` : cb.value;
+      });
+    planBtn.textContent = selected.length ? selected.join(", ") : "-- Select Plan Duration --";
+  }
+</script>
+
+</body>
+</html>

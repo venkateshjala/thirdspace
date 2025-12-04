@@ -1,0 +1,88 @@
+{% extends 'index.html' %}
+{% block content %}
+
+<style>
+.dashboard-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns per row */
+  gap: 20px; /* space between columns/rows */
+  margin-top: 20px;
+}
+
+.dashboard-row {
+  background: #fff;
+  box-shadow: 0 2px 8px #2222;
+  border-radius: 10px;
+  padding: 28px 20px 20px 20px;
+  min-height: 140px;
+  transition: transform 0.2s ease;
+}
+
+.dashboard-row:hover {
+  transform: translateY(-4px);
+}
+
+ @media (max-width: 600px) {
+            .dashboard-container {
+                max-width: 100vw;
+                padding: 0 4vw;
+                gap: 18px;
+            }
+        }
+
+</style>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <h1>Dashboard</h1>
+<body>
+    <div class="dashboard-container">
+        <div class="dashboard-row">
+            <h2>Monthly Transactions</h2>	
+            <canvas id="transactionsChart" width="200" height="120"></canvas>
+        </div>
+        <div class="dashboard-row">
+            <h2>Visitors Overview</h2>
+            <canvas id="visitorsChart" width="200" height="120"></canvas>
+        </div>
+    </div>
+    <script>
+        // Chart 1: Transactions (Bar)
+        const ctxTrans = document.getElementById('transactionsChart').getContext('2d');
+        new Chart(ctxTrans, {
+            type: 'bar',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'],
+                datasets: [{
+                    label: 'Transactions',
+                    data: [240,380,320,410,520,410,430,470,530],
+                    backgroundColor: '#00d6b6'
+                }]
+            },
+            options: {
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+
+        // Chart 2: Visitors (Line)
+        const ctxVisit = document.getElementById('visitorsChart').getContext('2d');
+        new Chart(ctxVisit, {
+            type: 'line',
+            data: {
+                labels: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep'],
+                datasets: [{
+                    label: 'Visitors',
+                    data: [1200, 1400, 1350, 1600, 1800, 1750, 1900, 2100, 2250],
+                    borderColor: '#222b45',
+                    backgroundColor: 'rgba(34,43,69,0.08)',
+                    tension: 0.3,
+                    fill: true
+                }]
+            },
+            options: {
+                scales: { y: { beginAtZero: true } }
+            }
+        });
+    </script>
+</body>
+{% endblock content %}
+
+ 
